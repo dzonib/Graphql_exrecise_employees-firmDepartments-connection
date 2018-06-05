@@ -82,6 +82,12 @@ const EmployeesType = new GraphQLObjectType({
     },
     firmDepartmentId: {
       type: GraphQLInt
+    },
+    department: {
+      type: FirmDepartmentType,
+      resolve(parent, args) {
+        return firmDepartments.find( department => department.id === parent.firmDepartmentId)
+      }
     }
   })
 })
@@ -92,7 +98,13 @@ const FirmDepartmentType = new GraphQLObjectType({
   fields: () => ({
     departmentName: {type: GraphQLString},
     id: {type: GraphQLID},
-    description: {type: GraphQLString}
+    description: {type: GraphQLString},
+    employees: {
+      type: new GraphQLList(EmployeesType),
+      resolve(parent, args) {
+        return employees.filter( employee => employee.id === parent.id)
+      }
+    }
   })
 })
 
